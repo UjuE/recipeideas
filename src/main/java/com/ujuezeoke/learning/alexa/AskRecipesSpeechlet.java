@@ -88,6 +88,9 @@ public class AskRecipesSpeechlet implements Speechlet {
         return newAskResponse(outputSpeech, reprompt, simpleCard);
     }
 
+    //todo remove href from speech only add that to cards.
+    //todo Choose random food if intent is null. say "I didn't quite get what you said, however here are 3 recipe ideas with blah"
+    //todo anything with chicken return chicken, for eggs return egg, for onion return onions
     private SpeechletResponse processGetRecipeIntent(Intent intent) {
         final String ingredient = intent.getSlot(INGREDIENT_SLOT_NAME).getValue();
         AtomicInteger integer = new AtomicInteger(1);
