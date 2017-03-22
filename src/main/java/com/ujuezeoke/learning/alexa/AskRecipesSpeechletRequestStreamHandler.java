@@ -13,10 +13,10 @@ public class AskRecipesSpeechletRequestStreamHandler extends SpeechletRequestStr
 
     public AskRecipesSpeechletRequestStreamHandler() {
         super(new AskRecipesSpeechlet(new RecipePuppyRequestSender(RECIPE_PUPPY_URL)),
-                new HashSet<>(singletonList("amzn1.echo-sdk-ams.app." + uniqueAppID())));
+                new HashSet<>(singletonList(uniqueAlexaAppID())));
     }
 
-    private static String uniqueAppID() {
+    private static String uniqueAlexaAppID() {
         return System.getenv().getOrDefault("recipe_ideas_arn", "[unique.id.here]");
     }
 }
