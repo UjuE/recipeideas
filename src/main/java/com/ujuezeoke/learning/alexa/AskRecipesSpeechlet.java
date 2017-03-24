@@ -59,12 +59,16 @@ public class AskRecipesSpeechlet implements Speechlet {
         final Intent intent = request.getIntent();
         final String intentName = intent.getName();
 
-        if ("GetRecipeIdeasIntent".equals(intentName)) {
-            return processGetRecipeIntent(intent);
-        } else if ("AMAZON.HelpIntent".equals(intentName)) {
-            return processHelpIntent();
-        } else {
-            throw new SpeechletException("Invalid Intent");
+        switch (intentName) {
+            case "GetRecipeIdeasIntent":
+                return processGetRecipeIntent(intent);
+            case "AMAZON.HelpIntent":
+                return processHelpIntent();
+            case "AMAZON.CancelIntent":
+            case "AMAZON.StopIntent":
+                return processStopIntent();
+            default:
+                throw new SpeechletException("Invalid Intent");
         }
     }
 
@@ -91,11 +95,25 @@ public class AskRecipesSpeechlet implements Speechlet {
         return newAskResponse(outputSpeech, reprompt, simpleCard);
     }
 
+    private SpeechletResponse processStopIntent() {
+        String speechText = "Thank you for using Recipe Ideas. Goodbye.";
+        final PlainTextOutputSpeech outputSpeech = new PlainTextOutputSpeech();
+        final PlainTextOutputSpeech repromptOutputSpeech = new PlainTextOutputSpeech();
+        final SimpleCard simpleCard = new SimpleCard();
+
+
+        outputSpeech.setText(speechText);
+        repromptOutputSpeech.setText(speechText);
+        simpleCard.setTitle("RecipeIdeasStop");
+        simpleCard.setContent(speechText);
+        return newTellResponse(outputSpeech, simpleCard);
+    }
+
     //todo anything with chicken return chicken, for eggs return egg, for onion return onions
     private SpeechletResponse processGetRecipeIntent(Intent intent) {
         final Optional<Slot> slot = Optional.ofNullable(intent.getSlot(INGREDIENT_SLOT_NAME));
         if (slot.isPresent() && Optional.ofNullable(slot.get().getValue()).isPresent()) {
-            final String ingredient =  slot.get().getValue();
+            final String ingredient = slot.get().getValue();
             return processIngredientExists(ingredient);
         }
         return noIngredientResponse();

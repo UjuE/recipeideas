@@ -214,8 +214,58 @@ public class AskRecipesSpeechletTest {
         verifyZeroInteractions(recipePuppyRequestSender);
 
         assertFalse(speechletResponse.getShouldEndSession());
-        assertThat(asPlainTextOutputSpeech(speechletResponse.getReprompt().getOutputSpeech()).getText(),
-                is("What ingredient do you want to use?"));
+        assertThat(asPlainTextOutputSpeech(speechletResponse.getOutputSpeech()).getText(),
+                is(expectedResponse));
+
+        assertThat(asSimpleCard(speechletResponse.getCard()).getContent(), is(expectedResponse));
+        assertThat(asPlainTextOutputSpeech(speechletResponse.getOutputSpeech()).getText(),
+                is(expectedResponse));
+    }
+
+    @Test
+    public void stopIntent() throws Exception {
+
+        final IntentRequest intentRequest = mock(IntentRequest.class);
+
+        final Intent intent = Intent.builder()
+                .withName("AMAZON.StopIntent")
+                .build();
+        final String expectedResponse = "Thank you for using Recipe Ideas. Goodbye.";
+
+        when(intentRequest.getIntent()).thenReturn(intent);
+
+        final SpeechletResponse speechletResponse = underTest.onIntent(intentRequest, testSession);
+
+        verifyZeroInteractions(recipePuppyRequestSender);
+
+        assertTrue(speechletResponse.getShouldEndSession());
+        assertThat(asPlainTextOutputSpeech(speechletResponse.getOutputSpeech()).getText(),
+                is(expectedResponse));
+
+        assertThat(asSimpleCard(speechletResponse.getCard()).getContent(), is(expectedResponse));
+        assertThat(asPlainTextOutputSpeech(speechletResponse.getOutputSpeech()).getText(),
+                is(expectedResponse));
+    }
+
+    @Test
+    public void cancelIntent() throws Exception {
+
+        final IntentRequest intentRequest = mock(IntentRequest.class);
+
+        final Intent intent = Intent.builder()
+                .withName("AMAZON.CancelIntent")
+                .build();
+        final String expectedResponse = "Thank you for using Recipe Ideas. Goodbye.";
+
+        when(intentRequest.getIntent()).thenReturn(intent);
+
+        final SpeechletResponse speechletResponse = underTest.onIntent(intentRequest, testSession);
+
+        verifyZeroInteractions(recipePuppyRequestSender);
+
+        assertTrue(speechletResponse.getShouldEndSession());
+        assertThat(asPlainTextOutputSpeech(speechletResponse.getOutputSpeech()).getText(),
+                is(expectedResponse));
 
         assertThat(asSimpleCard(speechletResponse.getCard()).getContent(), is(expectedResponse));
         assertThat(asPlainTextOutputSpeech(speechletResponse.getOutputSpeech()).getText(),
