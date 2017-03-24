@@ -1,6 +1,7 @@
 package com.ujuezeoke.learning.alexa;
 
 import com.amazon.speech.slu.Intent;
+import com.amazon.speech.slu.Slot;
 import com.amazon.speech.speechlet.*;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
@@ -8,6 +9,7 @@ import com.amazon.speech.ui.SimpleCard;
 import com.ujuezeoke.learning.alexa.recipe.domain.RecipeIdea;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.amazon.speech.speechlet.SpeechletResponse.newAskResponse;
@@ -20,6 +22,7 @@ import static java.util.stream.Collectors.joining;
 public class AskRecipesSpeechlet implements Speechlet {
 
     private static final String INGREDIENT_SLOT_NAME = "Ingredient";
+    private static final String RECIPE_IDEAS_TEMPLATE = "Here are %d recipe ideas with %s: \n%s";
     private final RecipePuppyRequestSender recipePuppyRequestSender;
 
     public AskRecipesSpeechlet(RecipePuppyRequestSender recipePuppyRequestSender) {
@@ -71,7 +74,7 @@ public class AskRecipesSpeechlet implements Speechlet {
     }
 
     private SpeechletResponse processHelpIntent() {
-        String speechText = "With Recipe Ideas, you can get a maximum of 3 recipe Ideas from one ingredient." +
+        String speechText = "With Recipe Ideas, you can get a maximum of 3 recipe Ideas from one ingredient. " +
                 "For example, you can say, lettuce. Now what ingredient would you like to cook with today?";
         String repromptText = "What ingredient do you want to use?";
         final PlainTextOutputSpeech outputSpeech = new PlainTextOutputSpeech();
@@ -88,30 +91,88 @@ public class AskRecipesSpeechlet implements Speechlet {
         return newAskResponse(outputSpeech, reprompt, simpleCard);
     }
 
-    //todo remove href from speech only add that to cards.
-    //todo Choose random food if intent is null. say "I didn't quite get what you said, however here are 3 recipe ideas with blah"
     //todo anything with chicken return chicken, for eggs return egg, for onion return onions
     private SpeechletResponse processGetRecipeIntent(Intent intent) {
-        final String ingredient = intent.getSlot(INGREDIENT_SLOT_NAME).getValue();
-        AtomicInteger integer = new AtomicInteger(1);
+        final Optional<Slot> slot = Optional.ofNullable(intent.getSlot(INGREDIENT_SLOT_NAME));
+        if (slot.isPresent() && Optional.ofNullable(slot.get().getValue()).isPresent()) {
+            final String ingredient =  slot.get().getValue();
+            return processIngredientExists(ingredient);
+        }
+        return noIngredientResponse();
+    }
+
+    private SpeechletResponse noIngredientResponse() {
+        String response = "I did not understand the ingredient you said. " +
+                "Please try using the singular form or add adjectives. " +
+                "For example, instead of onions, say onion please try onions. " +
+                "If you said chicken try fried chicken.";
+
+        SimpleCard card = new SimpleCard();
+        card.setTitle("RecipeIdeaList");
+        card.setContent(response);
+
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText(response);
+
+        return newTellResponse(speech, card);
+    }
+
+    private SpeechletResponse processIngredientExists(String ingredient) {
         final Collection<RecipeIdea> recipeIdeas =
                 recipePuppyRequestSender.recipesWithIngredient(ingredient);
-        final String recipeIdeasText = recipeIdeas.stream().map(it -> integer.getAndIncrement()+" "+it.getRecipeTitle() + " found on, " + it.getHref())
 
-                .collect(joining(" \n", " ", ""));
+        if (!recipeIdeas.isEmpty()) {
+            return processWithRecipeIdeasIdeas(ingredient, recipeIdeas);
+        }
+        return processWithNoIdeas(ingredient);
+    }
 
-        final String speechText = String.format("Here are %d recipe ideas with %s: \n%s",
-                recipeIdeas.size(), ingredient, recipeIdeasText);
+    private SpeechletResponse processWithNoIdeas(String ingredient) {
+        String response = String.format("There are no recipe ideas with %s.", ingredient);
+        SimpleCard card = new SimpleCard();
+        card.setTitle("RecipeIdeaList");
+        card.setContent(response);
 
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText(response);
+
+        return newTellResponse(speech, card);
+    }
+
+    private SpeechletResponse processWithRecipeIdeasIdeas(String ingredient, Collection<RecipeIdea> recipeIdeas) {
         // Create the Simple card content.
         SimpleCard card = new SimpleCard();
         card.setTitle("RecipeIdeaList");
-        card.setContent(speechText);
+        card.setContent(recipeIdeasForCards(recipeIdeas, ingredient));
 
         // Create the plain text output.
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText(speechText);
+        speech.setText(recipeIdeasForSpeechText(recipeIdeas, ingredient));
 
         return newTellResponse(speech, card);
+    }
+
+    private String recipeIdeasForSpeechText(Collection<RecipeIdea> recipeIdeas, String ingredient) {
+        AtomicInteger integer = new AtomicInteger(1);
+        final String ideas = recipeIdeas
+                .stream()
+                .map(it -> "Recipe " + integer.getAndIncrement() + ", " + it.getRecipeTitle())
+                .collect(joining(". "));
+        return formatText(recipeIdeas, ingredient, ideas);
+    }
+
+    private String recipeIdeasForCards(Collection<RecipeIdea> recipeIdeas, String ingredient) {
+        AtomicInteger integer = new AtomicInteger(1);
+        final String ideas = recipeIdeas
+                .stream()
+                .map(it -> integer.getAndIncrement() + " " + it.getRecipeTitle() + " found on, " + it.getHref())
+                .collect(joining(" \n", " ", ""));
+
+        return formatText(recipeIdeas, ingredient, ideas);
+    }
+
+    private String formatText(Collection<RecipeIdea> recipeIdeas, String ingredient, String ideas) {
+        return String.format("Here are %d recipe ideas with %s: \n%s",
+                recipeIdeas.size(), ingredient, ideas);
     }
 }
