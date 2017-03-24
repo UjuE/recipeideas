@@ -104,8 +104,8 @@ public class AskRecipesSpeechlet implements Speechlet {
     private SpeechletResponse noIngredientResponse() {
         String response = "I did not understand the ingredient you said. " +
                 "Please try using the singular form or add adjectives. " +
-                "For example, instead of onions, say onion please try onions. " +
-                "If you said chicken try fried chicken.";
+                "For example, instead of onions, say onion. " +
+                "Rather than chicken, try fried chicken.";
 
         SimpleCard card = new SimpleCard();
         card.setTitle("RecipeIdeaList");
@@ -158,7 +158,9 @@ public class AskRecipesSpeechlet implements Speechlet {
                 .stream()
                 .map(it -> "Recipe " + integer.getAndIncrement() + ", " + it.getRecipeTitle())
                 .collect(joining(". "));
-        return formatText(recipeIdeas, ingredient, ideas);
+        return formatText(recipeIdeas, ingredient, ideas)
+                .replace("&", "and")
+                .replace("_", " ");
     }
 
     private String recipeIdeasForCards(Collection<RecipeIdea> recipeIdeas, String ingredient) {

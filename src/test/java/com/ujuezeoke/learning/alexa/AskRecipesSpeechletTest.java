@@ -68,6 +68,43 @@ public class AskRecipesSpeechletTest {
     }
 
     @Test
+    public void hasNoAmpersandsOrUnderscores() throws Exception {
+        final List<RecipeIdea> recipeIdeas = asList(
+                new RecipeIdea("http://www.foo.com", "Beef_Stroodle"),
+                new RecipeIdea("http://www.bar.com", "Jam & Bread")
+        );
+
+        final IntentRequest intentRequest = mock(IntentRequest.class);
+        final String ingredient = "onions";
+
+        final Slot ingredientSlot = Slot.builder().withName("Ingredient").withValue(ingredient).build();
+        final Intent intent = Intent.builder()
+                .withName("GetRecipeIdeasIntent")
+                .withSlots(slotWith("Ingredient", ingredientSlot))
+                .build();
+        final String expectedCardResponse = "Here are 2 recipe ideas with onions: \n " +
+                "1 Beef_Stroodle found on, " +
+                "http://www.foo.com \n" +
+                "2 Jam & Bread found on, http://www.bar.com";
+
+        final String expectedSpokenResponse = "Here are 2 recipe ideas with onions: \n" +
+                "Recipe 1, Beef Stroodle. " +
+                "Recipe 2, Jam and Bread";
+
+        when(recipePuppyRequestSender.recipesWithIngredient(ingredient)).thenReturn(recipeIdeas);
+        when(intentRequest.getIntent()).thenReturn(intent);
+
+        final SpeechletResponse speechletResponse = underTest.onIntent(intentRequest, testSession);
+
+        assertTrue(speechletResponse.getShouldEndSession());
+        assertThat(speechletResponse.getCard().getTitle(), is("RecipeIdeaList"));
+
+        assertThat((asSimpleCard(speechletResponse.getCard())).getContent(), is(expectedCardResponse));
+        assertThat((asPlainTextOutputSpeech(speechletResponse.getOutputSpeech())).getText(),
+                is(expectedSpokenResponse));
+    }
+
+    @Test
     public void getRecipeIdeasIntentWithNoIdeas() throws Exception {
         final List<RecipeIdea> recipeIdeas = Collections.emptyList();
 
@@ -111,8 +148,8 @@ public class AskRecipesSpeechletTest {
                 .build();
         final String expectedCardResponse = "I did not understand the ingredient you said. " +
                 "Please try using the singular form or add adjectives. " +
-                "For example, instead of onions, say onion please try onions. " +
-                "If you said chicken try fried chicken.";
+                "For example, instead of onions, say onion. " +
+                "Rather than chicken, try fried chicken.";
 
         when(intentRequest.getIntent()).thenReturn(intent);
 
@@ -143,8 +180,8 @@ public class AskRecipesSpeechletTest {
                 .build();
         final String expectedCardResponse = "I did not understand the ingredient you said. " +
                 "Please try using the singular form or add adjectives. " +
-                "For example, instead of onions, say onion please try onions. " +
-                "If you said chicken try fried chicken.";
+                "For example, instead of onions, say onion. " +
+                "Rather than chicken, try fried chicken.";
 
         when(intentRequest.getIntent()).thenReturn(intent);
 
