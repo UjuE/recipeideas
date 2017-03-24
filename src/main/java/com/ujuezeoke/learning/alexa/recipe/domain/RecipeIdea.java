@@ -46,7 +46,4 @@ public class RecipeIdea {
                 '}';
     }
 
-    public String getHrefShortened() {
-        return href.replaceAll("http://www\\.(.*[\\.com|\\.net|\\.org]).*", "$1");
-    }
 }

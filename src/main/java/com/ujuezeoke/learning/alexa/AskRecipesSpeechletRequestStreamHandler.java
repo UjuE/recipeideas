@@ -1,6 +1,7 @@
 package com.ujuezeoke.learning.alexa;
 
 import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
+import com.ujuezeoke.learning.alexa.helper.IngredientReplacementMap;
 
 import java.util.HashSet;
 
@@ -12,7 +13,7 @@ public class AskRecipesSpeechletRequestStreamHandler extends SpeechletRequestStr
     public static final String RECIPE_PUPPY_URL = "http://www.recipepuppy.com";
 
     public AskRecipesSpeechletRequestStreamHandler() {
-        super(new AskRecipesSpeechlet(new RecipePuppyRequestSender(RECIPE_PUPPY_URL)),
+        super(new AskRecipesSpeechlet(new RecipePuppyRequestSender(RECIPE_PUPPY_URL, new IngredientReplacementMap())),
                 new HashSet<>(singletonList(uniqueAlexaAppID())));
     }
 

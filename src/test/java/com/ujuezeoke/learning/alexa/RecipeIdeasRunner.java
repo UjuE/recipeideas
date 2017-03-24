@@ -3,6 +3,7 @@ package com.ujuezeoke.learning.alexa;
 import com.amazon.speech.Sdk;
 import com.amazon.speech.speechlet.Speechlet;
 import com.amazon.speech.speechlet.servlet.SpeechletServlet;
+import com.ujuezeoke.learning.alexa.helper.IngredientReplacementMap;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -54,7 +55,7 @@ public class RecipeIdeasRunner {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
-        context.addServlet(new ServletHolder(createServlet(new AskRecipesSpeechlet(new RecipePuppyRequestSender(RECIPE_PUPPY_URL)))), "");
+        context.addServlet(new ServletHolder(createServlet(new AskRecipesSpeechlet(new RecipePuppyRequestSender(RECIPE_PUPPY_URL, new IngredientReplacementMap())))), "");
         server.start();
         server.join();
     }

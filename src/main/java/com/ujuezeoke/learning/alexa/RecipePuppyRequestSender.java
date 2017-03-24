@@ -3,6 +3,7 @@ package com.ujuezeoke.learning.alexa;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import com.ujuezeoke.learning.alexa.helper.IngredientReplacementMap;
 import com.ujuezeoke.learning.alexa.helper.JsonObjectToRecipeIdea;
 import com.ujuezeoke.learning.alexa.recipe.domain.RecipeIdea;
 import org.json.JSONArray;
@@ -19,15 +20,17 @@ import static java.util.stream.StreamSupport.stream;
 public class RecipePuppyRequestSender {
     private static final String URL_SUFFIX = "/api/";
     private final String url;
+    private final IngredientReplacementMap ingredientReplacementMap;
 
-    public RecipePuppyRequestSender(String url) {
+    public RecipePuppyRequestSender(String url, IngredientReplacementMap ingredientReplacementMap) {
         this.url = url + URL_SUFFIX;
+        this.ingredientReplacementMap = ingredientReplacementMap;
     }
 
     public Collection<RecipeIdea> recipesWithIngredient(String ingredient) {
         final HttpRequest getRequest = Unirest
                 .get(url)
-                .queryString("i", ingredient);
+                .queryString("i", ingredientReplacementMap.replacementFor(ingredient));
         try {
             final JSONArray results = getRequest
                     .asJson()
