@@ -46,4 +46,7 @@ public class RecipeIdea {
                 '}';
     }
 
+    public String getHrefShortened() {
+        return href.replaceAll("https?:\\//([a-zA-Z0-9.]+).*", "$1");
+    }
 }

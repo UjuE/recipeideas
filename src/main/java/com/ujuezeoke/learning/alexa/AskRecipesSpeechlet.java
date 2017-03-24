@@ -185,7 +185,7 @@ public class AskRecipesSpeechlet implements Speechlet {
         AtomicInteger integer = new AtomicInteger(1);
         final String ideas = recipeIdeas
                 .stream()
-                .map(it -> integer.getAndIncrement() + " " + it.getRecipeTitle() + " found on, " + it.getHref())
+                .map(it -> integer.getAndIncrement() + " " + it.getRecipeTitle() + " found on, " + it.getHrefShortened())
                 .collect(joining(" \n", " ", ""));
 
         return formatText(recipeIdeas, ingredient, ideas);

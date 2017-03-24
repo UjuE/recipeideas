@@ -34,7 +34,7 @@ public class AskRecipesSpeechletTest {
     public void getRecipeIdeasIntentWith2Ideas() throws Exception {
         final List<RecipeIdea> recipeIdeas = asList(
                 new RecipeIdea("http://www.foo.com", "Beef Stroodle"),
-                new RecipeIdea("http://www.bar.com", "Jam and Bread")
+                new RecipeIdea("http://www.bar.com/1221/ewewe/32442/2321.html", "Jam and Bread")
         );
 
         final IntentRequest intentRequest = mock(IntentRequest.class);
@@ -47,8 +47,8 @@ public class AskRecipesSpeechletTest {
                 .build();
         final String expectedCardResponse = "Here are 2 recipe ideas with onions: \n " +
                 "1 Beef Stroodle found on, " +
-                "http://www.foo.com \n" +
-                "2 Jam and Bread found on, http://www.bar.com";
+                "www.foo.com \n" +
+                "2 Jam and Bread found on, www.bar.com";
 
         final String expectedSpokenResponse = "Here are 2 recipe ideas with onions: \n" +
                 "Recipe 1, Beef Stroodle. " +
@@ -71,7 +71,8 @@ public class AskRecipesSpeechletTest {
     public void hasNoAmpersandsOrUnderscores() throws Exception {
         final List<RecipeIdea> recipeIdeas = asList(
                 new RecipeIdea("http://www.foo.com", "Beef_Stroodle"),
-                new RecipeIdea("http://www.bar.com", "Jam & Bread")
+                new RecipeIdea("http://www.bar.com", "Jam & Bread"),
+                new RecipeIdea("http://www.kraftfoods.com/kf/recipes/roast-chicken-66318.aspx", "Roast Chicken")
         );
 
         final IntentRequest intentRequest = mock(IntentRequest.class);
@@ -82,14 +83,16 @@ public class AskRecipesSpeechletTest {
                 .withName("GetRecipeIdeasIntent")
                 .withSlots(slotWith("Ingredient", ingredientSlot))
                 .build();
-        final String expectedCardResponse = "Here are 2 recipe ideas with onions: \n " +
+        final String expectedCardResponse = "Here are 3 recipe ideas with onions: \n " +
                 "1 Beef_Stroodle found on, " +
-                "http://www.foo.com \n" +
-                "2 Jam & Bread found on, http://www.bar.com";
+                "www.foo.com \n" +
+                "2 Jam & Bread found on, www.bar.com \n" +
+                "3 Roast Chicken found on, www.kraftfoods.com";
 
-        final String expectedSpokenResponse = "Here are 2 recipe ideas with onions: \n" +
+        final String expectedSpokenResponse = "Here are 3 recipe ideas with onions: \n" +
                 "Recipe 1, Beef Stroodle. " +
-                "Recipe 2, Jam and Bread";
+                "Recipe 2, Jam and Bread. " +
+                "Recipe 3, Roast Chicken";
 
         when(recipePuppyRequestSender.recipesWithIngredient(ingredient)).thenReturn(recipeIdeas);
         when(intentRequest.getIntent()).thenReturn(intent);
@@ -133,12 +136,6 @@ public class AskRecipesSpeechletTest {
 
     @Test
     public void nullIngredientSlot() throws Exception {
-        final List<RecipeIdea> recipeIdeas = asList(
-                new RecipeIdea("http://www.foo.com", "Beef Stroodle"),
-                new RecipeIdea("http://www.kung.com", "Chicken annoyance"),
-                new RecipeIdea("http://www.bar.com", "Jam and Bread")
-        );
-
         final IntentRequest intentRequest = mock(IntentRequest.class);
 
         final Slot ingredientSlot = Slot.builder().withName("Ingredient").build();
@@ -166,12 +163,6 @@ public class AskRecipesSpeechletTest {
 
     @Test
     public void nullIngredientSlotValue() throws Exception {
-        final List<RecipeIdea> recipeIdeas = asList(
-                new RecipeIdea("http://www.foo.com", "Beef Stroodle"),
-                new RecipeIdea("http://www.kung.com", "Chicken annoyance"),
-                new RecipeIdea("http://www.bar.com", "Jam and Bread")
-        );
-
         final IntentRequest intentRequest = mock(IntentRequest.class);
 
         final Intent intent = Intent.builder()
