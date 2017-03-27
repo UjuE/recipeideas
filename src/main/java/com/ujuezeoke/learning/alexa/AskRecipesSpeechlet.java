@@ -7,6 +7,7 @@ import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
 import com.ujuezeoke.learning.alexa.recipe.domain.RecipeIdea;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -21,8 +22,8 @@ import static java.util.stream.Collectors.joining;
  */
 public class AskRecipesSpeechlet implements Speechlet {
 
+    private static final Logger LOG = Logger.getRootLogger();
     private static final String INGREDIENT_SLOT_NAME = "Ingredient";
-    private static final String RECIPE_IDEAS_TEMPLATE = "Here are %d recipe ideas with %s: \n%s";
     private final RecipePuppyRequestSender recipePuppyRequestSender;
 
     public AskRecipesSpeechlet(RecipePuppyRequestSender recipePuppyRequestSender) {
@@ -31,11 +32,12 @@ public class AskRecipesSpeechlet implements Speechlet {
 
     @Override
     public void onSessionStarted(SessionStartedRequest request, Session session) throws SpeechletException {
-        //Do Nothing
+        LOG.info("On Session started: \nRequest: " + request.getRequestId() + "\n Session: " + session.getSessionId());
     }
 
     @Override
     public SpeechletResponse onLaunch(LaunchRequest request, Session session) throws SpeechletException {
+        LOG.info("On Launch: \nRequest: " + request.getRequestId() + "\n Session: " + session.getSessionId());
         String speechText = "Welcome to the Ask Recipes skill. What ingredient would you like to cook with today";
 
         // Create the Simple card content.
@@ -56,6 +58,7 @@ public class AskRecipesSpeechlet implements Speechlet {
 
     @Override
     public SpeechletResponse onIntent(IntentRequest request, Session session) throws SpeechletException {
+        LOG.info("On Intent: \nRequest: " + request.getRequestId() + "\n Session: " + session.getSessionId());
         final Intent intent = request.getIntent();
         final String intentName = intent.getName();
 
@@ -74,7 +77,7 @@ public class AskRecipesSpeechlet implements Speechlet {
 
     @Override
     public void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException {
-        //Do Nothing
+        LOG.info("On Session Ended: \nRequest: " + request.getRequestId() + "\n Session is new: " + session.getSessionId());
     }
 
     private SpeechletResponse processHelpIntent() {

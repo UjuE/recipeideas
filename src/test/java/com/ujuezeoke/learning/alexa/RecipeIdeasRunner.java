@@ -25,7 +25,7 @@ public class RecipeIdeasRunner {
     public static void main(String[] args) throws Exception {
         // Configure logging to output to the console with default level of INFO
         Logger root = Logger.getRootLogger();
-        root.setLevel(Level.ALL);
+        root.setLevel(Level.INFO);
         root.addAppender(new ConsoleAppender(
                 new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
 //
