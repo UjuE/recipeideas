@@ -1,8 +1,8 @@
-package com.ujuezeoke.learning.alexa;
+package com.ujuezeoke.learning.alexaskill;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.ujuezeoke.learning.alexa.helper.IngredientReplacementMap;
-import com.ujuezeoke.learning.alexa.recipe.domain.RecipeIdea;
+import com.ujuezeoke.learning.alexaskill.helper.IngredientReplacementMap;
+import com.ujuezeoke.learning.alexaskill.recipe.domain.RecipeIdea;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.sun.jndi.toolkit.url.UrlUtil.encode;
-import static com.ujuezeoke.learning.alexa.SampleResponses.SAMPLE_RESPONSE_WITH_RECIPES;
+import static com.ujuezeoke.learning.alexaskill.SampleResponses.SAMPLE_RESPONSE_WITH_RECIPES;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;

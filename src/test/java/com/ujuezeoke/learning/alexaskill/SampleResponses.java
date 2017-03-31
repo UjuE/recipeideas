@@ -1,4 +1,4 @@
-package com.ujuezeoke.learning.alexa;
+package com.ujuezeoke.learning.alexaskill;
 
 /**
  * Created by Obianuju Ezeoke on 18/03/2017.

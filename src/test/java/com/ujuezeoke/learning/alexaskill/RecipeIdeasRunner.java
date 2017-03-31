@@ -1,9 +1,9 @@
-package com.ujuezeoke.learning.alexa;
+package com.ujuezeoke.learning.alexaskill;
 
 import com.amazon.speech.Sdk;
 import com.amazon.speech.speechlet.Speechlet;
 import com.amazon.speech.speechlet.servlet.SpeechletServlet;
-import com.ujuezeoke.learning.alexa.helper.IngredientReplacementMap;
+import com.ujuezeoke.learning.alexaskill.helper.IngredientReplacementMap;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

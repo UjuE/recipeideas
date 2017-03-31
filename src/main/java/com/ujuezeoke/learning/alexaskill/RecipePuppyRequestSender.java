@@ -1,11 +1,11 @@
-package com.ujuezeoke.learning.alexa;
+package com.ujuezeoke.learning.alexaskill;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
-import com.ujuezeoke.learning.alexa.helper.IngredientReplacementMap;
-import com.ujuezeoke.learning.alexa.helper.JsonObjectToRecipeIdea;
-import com.ujuezeoke.learning.alexa.recipe.domain.RecipeIdea;
+import com.ujuezeoke.learning.alexaskill.helper.IngredientReplacementMap;
+import com.ujuezeoke.learning.alexaskill.helper.JsonObjectToRecipeIdea;
+import com.ujuezeoke.learning.alexaskill.recipe.domain.RecipeIdea;
 import org.json.JSONArray;
 
 import java.util.Collection;

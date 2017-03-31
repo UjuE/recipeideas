@@ -1,4 +1,4 @@
-package com.ujuezeoke.learning.alexa;
+package com.ujuezeoke.learning.alexaskill;
 
 import com.amazon.speech.slu.Intent;
 import com.amazon.speech.slu.Slot;
@@ -9,7 +9,7 @@ import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.SimpleCard;
-import com.ujuezeoke.learning.alexa.recipe.domain.RecipeIdea;
+import com.ujuezeoke.learning.alexaskill.recipe.domain.RecipeIdea;
 import org.junit.Test;
 
 import java.util.Collections;

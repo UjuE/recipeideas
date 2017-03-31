@@ -1,4 +1,4 @@
-group 'com.ujuezeoke.learning.alexa'
+group 'com.ujuezeoke.learning.alexaskill'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -15,14 +15,9 @@ repositories {
 }
 
 jar {
-//    doFirst {
-//        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    }
-//    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
     manifest {
         attributes 'Main-Class': 'com.ujuezeoke.learning.alexa.RecipeIdeasRunner',
                 'Implementation-Title': 'RecipeIdea Quickstart'
-//                'Implementation-Version': version
     }
 }
 

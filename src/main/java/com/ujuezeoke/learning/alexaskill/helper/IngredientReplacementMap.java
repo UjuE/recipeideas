@@ -1,4 +1,4 @@
-package com.ujuezeoke.learning.alexa.helper;
+package com.ujuezeoke.learning.alexaskill.helper;
 
 import java.util.HashMap;
 import java.util.Map;

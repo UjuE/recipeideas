@@ -1,6 +1,6 @@
-package com.ujuezeoke.learning.alexa.helper;
+package com.ujuezeoke.learning.alexaskill.helper;
 
-import com.ujuezeoke.learning.alexa.recipe.domain.RecipeIdea;
+import com.ujuezeoke.learning.alexaskill.recipe.domain.RecipeIdea;
 import org.json.JSONObject;
 
 /**

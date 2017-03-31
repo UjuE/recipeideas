@@ -1,4 +1,4 @@
-package com.ujuezeoke.learning.alexa.recipe.domain;
+package com.ujuezeoke.learning.alexaskill.recipe.domain;
 
 /**
  * Created by Obianuju Ezeoke on 18/03/2017.
